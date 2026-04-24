@@ -1,6 +1,6 @@
-# Streaming Tracker
+# tv streaming tracker
 
-A tiny, self-hostable "currently watching" API for Prime Video, Netflix, and Disney+. Anyone can deploy it for free and show what they're streaming on their personal website — no Discord, no third-party service.
+a tiny, self-hostable "currently watching" API for Prime Video, Netflix, and Disney+. Anyone can deploy it for free and show what they're streaming on their personal website
 
 ## How it works
 
@@ -22,7 +22,7 @@ Two parts, plus a small snippet for your site:
 
 ### 1. Deploy the Cloudflare Worker
 
-You'll need a [free Cloudflare account](https://dash.cloudflare.com/sign-up) (no credit card).
+You'll need a [free Cloudflare account](https://dash.cloudflare.com/sign-up)
 
 ```bash
 cd worker
@@ -45,7 +45,7 @@ binding = "WATCHING"
 id = "paste-id-here"
 ```
 
-Set an auth token (any random string — this is your secret):
+Set an auth token:
 
 ```bash
 wrangler secret put AUTH_TOKEN
@@ -58,16 +58,15 @@ Deploy:
 wrangler deploy
 ```
 
-You'll get a URL like `https://streaming-tracker.<yourname>.workers.dev`. Keep this + your token.
+You'll get a URL like `https://streaming-tracker.<yourname>.workers.dev`
 
 ### 2. Install the extension
 
 1. Open `chrome://extensions` (or `edge://extensions`, `brave://extensions`)
-2. Toggle **Developer mode** on
-3. Click **Load unpacked** and pick the `extension/` folder
-4. Click the extension's puzzle icon → **Options**
+2. Toggle Developer mode on
+3. Click Load unpacked and pick the `extension/` folder
+4. Click the extension's puzzle icon then Options
 5. Paste your worker URL and your AUTH_TOKEN
-6. Save
 
 ### 3. Display it on your site
 
@@ -103,18 +102,8 @@ See `client-example.html` for a styled version.
 
 ## Supported services
 
-- ✅ Prime Video (`primevideo.com`, `amazon.com/gp/video`)
-- ✅ Netflix (`netflix.com/watch`)
-- ✅ Disney+ (`disneyplus.com`)
+- [Prime Video](primevideo.com)
+- [Netflix](netflix.com/watch)
+- [Disney+](disneyplus.com)
 
-Adding more is easy — add the host permission in `manifest.json` and a `getTitleX()` scraper in `content.js`.
-
-## Privacy
-
-- Only YOU see your watch state, protected by YOUR auth token.
-- The public `GET /` endpoint is read-only — anyone can see the title, but no one can write.
-- No analytics, no third parties, all code is open.
-
-## License
-
-MIT — see [LICENSE](./LICENSE). Do whatever you want with it.
+To add more just add the host permission in `manifest.json` and a `getTitleX()` scraper in `content.js`
