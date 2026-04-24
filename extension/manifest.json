@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Streaming Tracker",
+  "version": "1.1.0",
+  "description": "Sends currently-watching info from Prime Video, Netflix, and Disney+ to your personal API.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://www.primevideo.com/*",
+    "https://www.amazon.com/*",
+    "https://www.amazon.co.uk/*",
+    "https://www.netflix.com/*",
+    "https://www.disneyplus.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.primevideo.com/*",
+        "https://www.amazon.com/gp/video/*",
+        "https://www.amazon.co.uk/gp/video/*",
+        "https://www.netflix.com/watch/*",
+        "https://www.netflix.com/title/*",
+        "https://www.disneyplus.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "action": {
+    "default_title": "Streaming Tracker"
+  }
+}

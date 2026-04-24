@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Streaming Tracker Settings</title>
+    <style>
+      body { font-family: system-ui, sans-serif; padding: 20px; max-width: 420px; background: #292524; color: #fff; }
+      label { display: block; margin-top: 14px; font-size: 0.875rem; font-weight: 600; }
+      input { width: 100%; padding: 8px; margin-top: 4px; border-radius: 6px; border: 1px solid #44403c; background: #1c1917; color: #fff; font-family: inherit; }
+      button { margin-top: 16px; padding: 8px 16px; border-radius: 6px; border: none; background: #7c3aed; color: #fff; font-weight: 600; cursor: pointer; }
+      .status { margin-top: 10px; font-size: 0.8125rem; color: #a8a29e; min-height: 1em; }
+    </style>
+  </head>
+  <body>
+    <h1 style="margin:0 0 8px 0">Streaming Tracker</h1>
+    <p style="color:#a8a29e;font-size:0.875rem;margin:0">Point this at your Cloudflare Worker.</p>
+    <label>API URL
+      <input id="apiUrl" type="url" placeholder="https://prime-tracker.yourname.workers.dev" />
+    </label>
+    <label>Auth Token
+      <input id="authToken" type="password" placeholder="your AUTH_TOKEN secret" />
+    </label>
+    <button id="save">Save</button>
+    <div class="status" id="status"></div>
+    <script src="options.js"></script>
+  </body>
+</html>

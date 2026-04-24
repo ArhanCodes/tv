@@ -1,0 +1,7 @@
+name = "streaming-tracker"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "WATCHING"
+id = "41366bfe279b4ba7a85d981fae92bafd"
