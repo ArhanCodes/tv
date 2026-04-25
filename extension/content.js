@@ -4,6 +4,42 @@ const STOP_GRACE_MS = 60 * 1000;
 let lastTitle = null;
 let lastReport = 0;
 let stopTimer = null;
+let cachedConfig = null;
+
+async function getConfig() {
+  if (cachedConfig) return cachedConfig;
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['apiUrl', 'authToken'], (cfg) => {
+      cachedConfig = cfg || {};
+      resolve(cachedConfig);
+    });
+  });
+}
+
+chrome.storage.onChanged.addListener(() => {
+  cachedConfig = null;
+});
+
+async function send(path, body) {
+  const { apiUrl, authToken } = await getConfig();
+  if (!apiUrl || !authToken) {
+    console.warn('[streaming-tracker] not configured. Open the extension Options.');
+    return;
+  }
+  try {
+    const res = await fetch(apiUrl.replace(/\/$/, '') + path, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    console.log('[streaming-tracker]', path, res.status);
+  } catch (e) {
+    console.warn('[streaming-tracker] fetch failed', e);
+  }
+}
 
 function detectService() {
   const host = location.hostname;
@@ -95,18 +131,10 @@ function getTitleForService(service) {
   }
 }
 
-function report(service, title) {
-  lastReport = Date.now();
-  chrome.runtime.sendMessage({
-    type: 'update',
-    payload: { title, service, url: location.href },
-  });
-}
-
 function scheduleStop() {
   clearTimeout(stopTimer);
   stopTimer = setTimeout(() => {
-    chrome.runtime.sendMessage({ type: 'clear' });
+    send('/clear');
     lastTitle = null;
   }, STOP_GRACE_MS);
 }
@@ -125,11 +153,15 @@ function tick() {
 
   if (!video.paused && !video.ended && video.currentTime > 0) {
     const title = getTitleForService(service);
-    if (!title) return;
+    if (!title) {
+      console.log('[streaming-tracker] playing but no title found yet');
+      return;
+    }
     cancelStop();
     if (title !== lastTitle || Date.now() - lastReport > REPORT_INTERVAL_MS) {
       lastTitle = title;
-      report(service, title);
+      lastReport = Date.now();
+      send('/update', { title, service, url: location.href });
     }
   } else {
     scheduleStop();
@@ -151,5 +183,7 @@ setInterval(hookVideo, 2000);
 hookVideo();
 
 window.addEventListener('pagehide', () => {
-  chrome.runtime.sendMessage({ type: 'clear' });
+  send('/clear');
 });
+
+console.log('[streaming-tracker] content script loaded on', location.host);
