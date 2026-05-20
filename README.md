@@ -1,6 +1,6 @@
-# tv streaming tracker
+# tv
 
-a tiny, self-hostable "currently watching" API for Prime Video, Netflix, and Disney+. Anyone can deploy it for free and show what they're streaming on their personal website
+Streaming tracker for Prime Video, Netflix, and Disney+. Anyone can deploy and show what they're streaming on their website
 
 ## How it works
 
